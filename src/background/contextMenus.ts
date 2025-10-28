@@ -31,7 +31,7 @@ export class ContextMenuManager {
       // ソートメニューの親を作成
       await chrome.contextMenus.create({
         id: 'sort-menu',
-        title: '今すぐソート',
+        title: 'ソート',
         contexts: ['action']
       });
 
