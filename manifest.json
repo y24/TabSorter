@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "TabSorter",
+  "version": "0.1.0",
+  "description": "タブを指定ルールで並び替えるChrome拡張",
+  "action": {
+    "default_title": "タブを並び替え"
+  },
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "contextMenus"
+  ],
+  "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+  },
+  "options_page": "options/index.html",
+  "icons": {
+    "16": "assets/icon16.svg",
+    "32": "assets/icon32.svg",
+    "48": "assets/icon48.svg",
+    "128": "assets/icon128.svg"
+  }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabSorter 設定</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>TabSorter 設定</h1>
+            <p>タブの並び替えルールを設定してください</p>
+        </header>
+
+        <main>
+            <form id="settings-form">
+                <section class="setting-section">
+                    <h2>メインルール</h2>
+                    <p>拡張アイコンを左クリックしたときに適用されるルールを選択してください</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="mainRule" value="domain" checked>
+                            <span class="radio-label">ドメイン名順</span>
+                            <span class="radio-description">URLのドメイン名で並び替えます</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="mainRule" value="openedAt">
+                            <span class="radio-label">開いた順</span>
+                            <span class="radio-description">タブを開いた順番で並び替えます</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="mainRule" value="lastAccessed">
+                            <span class="radio-label">最近使った順</span>
+                            <span class="radio-description">最近アクセスした順で並び替えます</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="setting-section">
+                    <h2>タブグループの扱い</h2>
+                    <p>タブグループがある場合の並び替え方法を選択してください</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="groupMode" value="sortWithin" checked>
+                            <span class="radio-label">グループ内でのみソート</span>
+                            <span class="radio-description">各グループ内でタブを並び替え、グループ間の順序は保持します</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="groupMode" value="groupsToHead">
+                            <span class="radio-label">グループの塊を先頭へ移動</span>
+                            <span class="radio-description">グループを塊のまま先頭に寄せます</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="setting-section">
+                    <h2>ピン留めタブの扱い</h2>
+                    <p>ピン留めタブの並び替え方法を選択してください</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="pinMode" value="sortPinned" checked>
+                            <span class="radio-label">ピン留めタブ内でソート</span>
+                            <span class="radio-description">ピン留め領域内でタブを並び替えます</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="pinMode" value="keepPinned">
+                            <span class="radio-label">ピン留めタブをソートしない</span>
+                            <span class="radio-description">ピン留め領域はそのまま固定します</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="setting-section">
+                    <h2>スコープ</h2>
+                    <p>並び替えの対象範囲を選択してください</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="scope" value="currentWindow" checked>
+                            <span class="radio-label">現在のウィンドウのみ</span>
+                            <span class="radio-description">アクティブなウィンドウのタブのみを並び替えます</span>
+                        </label>
+                        <label class="radio-option" disabled>
+                            <input type="radio" name="scope" value="allWindows" disabled>
+                            <span class="radio-label">すべてのウィンドウ</span>
+                            <span class="radio-description">将来の機能として実装予定です</span>
+                        </label>
+                    </div>
+                </section>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">設定を保存</button>
+                    <button type="button" id="reset-btn" class="btn btn-secondary">リセット</button>
+                </div>
+            </form>
+
+            <div id="toast" class="toast hidden"></div>
+        </main>
+
+        <footer>
+            <p>TabSorter v0.1.0</p>
+        </footer>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
