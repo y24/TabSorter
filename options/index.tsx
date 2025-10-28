@@ -80,6 +80,12 @@ class OptionsPage {
       pinModeInput.checked = true;
     }
 
+    // 並び順
+    const sortOrderInput = this.form.querySelector(`input[name="sortOrder"][value="${settings.sortOrder}"]`) as HTMLInputElement;
+    if (sortOrderInput) {
+      sortOrderInput.checked = true;
+    }
+
     // スコープ
     const scopeInput = this.form.querySelector(`input[name="scope"][value="${settings.scope}"]`) as HTMLInputElement;
     if (scopeInput) {
@@ -176,6 +182,7 @@ class OptionsPage {
       groupMode: formData.get('groupMode') as any,
       pinMode: formData.get('pinMode') as any,
       scope: formData.get('scope') as any,
+      sortOrder: formData.get('sortOrder') as any,
       schemaVersion: DEFAULT_SETTINGS.schemaVersion
     };
   }

@@ -91,9 +91,9 @@ export class SortExecutor {
   ): Promise<SortResult> {
     try {
       if (settings.groupMode === 'sortWithin') {
-        return await this.sortWithinGroups(tabs, rule);
+        return await this.sortWithinGroups(tabs, rule, settings);
       } else {
-        return await this.sortGroupsToHead(tabs, rule);
+        return await this.sortGroupsToHead(tabs, rule, settings);
       }
     } catch (error) {
       console.error('グループ並び替え中にエラー:', error);
@@ -107,18 +107,18 @@ export class SortExecutor {
   /**
    * グループ内でのみソート
    */
-  private static async sortWithinGroups(tabs: chrome.tabs.Tab[], rule: any): Promise<SortResult> {
+  private static async sortWithinGroups(tabs: chrome.tabs.Tab[], rule: any, settings: Settings): Promise<SortResult> {
     const groups = TabUtils.groupTabsByGroupId(tabs);
     let movedTabs = 0;
 
     for (const [groupId, groupTabs] of groups) {
       if (groupId === -1) {
         // グループ未所属タブ
-        const result = await this.sortTabArray(groupTabs, rule);
+        const result = await this.sortTabArray(groupTabs, rule, settings);
         movedTabs += result.movedTabs || 0;
       } else {
         // グループ内タブ
-        const result = await this.sortTabArray(groupTabs, rule);
+        const result = await this.sortTabArray(groupTabs, rule, settings);
         movedTabs += result.movedTabs || 0;
       }
     }
@@ -132,7 +132,7 @@ export class SortExecutor {
   /**
    * グループの塊を先頭に寄せる
    */
-  private static async sortGroupsToHead(tabs: chrome.tabs.Tab[], rule: any): Promise<SortResult> {
+  private static async sortGroupsToHead(tabs: chrome.tabs.Tab[], rule: any, settings: Settings): Promise<SortResult> {
     const groups = TabUtils.groupTabsByGroupId(tabs);
     const ungroupedTabs = groups.get(-1) || [];
     const groupedTabs = Array.from(groups.entries())
@@ -143,7 +143,7 @@ export class SortExecutor {
 
     // グループ未所属タブを並び替え
     if (ungroupedTabs.length > 0) {
-      const result = await this.sortTabArray(ungroupedTabs, rule);
+      const result = await this.sortTabArray(ungroupedTabs, rule, settings);
       movedTabs += result.movedTabs || 0;
     }
 
@@ -166,7 +166,7 @@ export class SortExecutor {
   /**
    * タブ配列を並び替える
    */
-  private static async sortTabArray(tabs: chrome.tabs.Tab[], rule: any): Promise<SortResult> {
+  private static async sortTabArray(tabs: chrome.tabs.Tab[], rule: any, settings: Settings): Promise<SortResult> {
     if (tabs.length <= 1) {
       return { success: true, movedTabs: 0 };
     }
@@ -182,7 +182,7 @@ export class SortExecutor {
 
       // 安定ソートを実行
       tabWithKeys.sort((a, b) => {
-        const comparison = this.compareKeys(a.key, b.key, rule.order);
+        const comparison = this.compareKeys(a.key, b.key, settings.sortOrder);
         if (comparison !== 0) return comparison;
         
         // 同順の場合は元のインデックスで安定化

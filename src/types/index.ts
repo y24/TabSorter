@@ -4,6 +4,7 @@ export type RuleId = 'domain' | 'openedAt' | 'lastAccessed';
 export type GroupMode = 'sortWithin' | 'groupsToHead';
 export type PinMode = 'sortPinned' | 'keepPinned';
 export type Scope = 'currentWindow' | 'allWindows';
+export type SortOrder = 'asc' | 'desc';
 
 // 設定の型定義
 export interface Settings {
@@ -11,6 +12,7 @@ export interface Settings {
   groupMode: GroupMode;
   pinMode: PinMode;
   scope: Scope;
+  sortOrder: SortOrder;
   schemaVersion: number;
 }
 
@@ -42,6 +44,7 @@ export const DEFAULT_SETTINGS: Settings = {
   groupMode: 'sortWithin',
   pinMode: 'sortPinned',
   scope: 'currentWindow',
+  sortOrder: 'asc',
   schemaVersion: 1
 };
 

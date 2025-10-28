@@ -6,7 +6,7 @@
     "build": "esbuild src/background/index.ts --bundle --format=esm --outfile=dist/background/index.js --platform=browser --target=es2020",
     "build:options": "esbuild options/index.tsx --bundle --format=iife --outfile=dist/options/index.js --platform=browser --target=es2020 --jsx=automatic",
     "copy:manifest": "powershell -Command \"Copy-Item manifest.json dist/\"",
-    "copy:assets": "powershell -Command \"Copy-Item assets dist/ -Recurse\"",
+    "copy:assets": "powershell -Command \"if (Test-Path 'dist/assets') { Remove-Item 'dist/assets' -Recurse -Force }; Copy-Item assets dist/ -Recurse\"",
     "copy:options": "powershell -Command \"Copy-Item options/index.html dist/options/; Copy-Item options/style.css dist/options/\"",
     "build:all": "npm run build && npm run build:options && npm run copy:manifest && npm run copy:assets && npm run copy:options",
     "dev": "npm run build:all && echo 'Build completed. Load dist folder as unpacked extension in Chrome.'",

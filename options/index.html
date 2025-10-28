@@ -16,6 +16,23 @@
         <main>
             <form id="settings-form">
                 <section class="setting-section">
+                    <h2>並び順</h2>
+                    <p>ソートの順序を選択してください</p>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="sortOrder" value="asc" checked>
+                            <span class="radio-label">昇順</span>
+                            <span class="radio-description">小さい値から大きい値の順で並び替えます（例：A→Z、古い→新しい）</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="sortOrder" value="desc">
+                            <span class="radio-label">降順</span>
+                            <span class="radio-description">大きい値から小さい値の順で並び替えます（例：Z→A、新しい→古い）</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="setting-section">
                     <h2>メインルール</h2>
                     <p>拡張アイコンを左クリックしたときに適用されるルールを選択してください</p>
                     <div class="radio-group">
