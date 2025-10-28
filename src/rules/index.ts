@@ -62,11 +62,12 @@ export const lastAccessedSortRule: SortRule = {
   id: 'lastAccessed',
   label: '最近使った順',
   getKeyFn: (tab: chrome.tabs.Tab): SortKey => {
-    // lastAccessedはミリ秒単位のタイムスタンプ
-    const lastAccessed = tab.lastAccessed || 0;
-    return [lastAccessed];
+    // Chrome拡張機能APIではlastAccessedプロパティが利用できないため、
+    // タブのインデックスを代わりに使用（新しいタブほど後ろに配置される）
+    const index = tab.index || 0;
+    return [index];
   },
-  order: 'desc' // 降順（最近ほど先頭）
+  order: 'desc' // 降順（新しいタブほど先頭）
 };
 
 /**

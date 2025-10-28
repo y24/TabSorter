@@ -20,7 +20,7 @@ export interface Settings {
 export interface SortRule {
   id: RuleId;
   label: string;
-  getKeyFn: (tab: chrome.tabs.Tab) => SortKey;
+  getKeyFn: (tab: chrome.tabs.Tab) => SortKey | Promise<SortKey>;
   order: 'asc' | 'desc';
 }
 

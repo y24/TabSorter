@@ -9,7 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "types": ["chrome"]
   },
   "include": ["src/**/*", "options/**/*"],

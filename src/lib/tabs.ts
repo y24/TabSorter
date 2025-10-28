@@ -11,8 +11,7 @@ export class TabUtils {
       const tabs = await chrome.tabs.query({ 
         windowId: window.id
       });
-      // hiddenプロパティでフィルタリング（APIではサポートされていないため、手動でフィルタリング）
-      return tabs.filter(tab => !tab.hidden);
+      return tabs;
     } catch (error) {
       console.error('現在のウィンドウのタブ取得に失敗:', error);
       throw error;
@@ -25,8 +24,7 @@ export class TabUtils {
   static async getAllWindowsTabs(): Promise<chrome.tabs.Tab[]> {
     try {
       const tabs = await chrome.tabs.query({});
-      // hiddenプロパティでフィルタリング（APIではサポートされていないため、手動でフィルタリング）
-      return tabs.filter(tab => !tab.hidden);
+      return tabs;
     } catch (error) {
       console.error('すべてのウィンドウのタブ取得に失敗:', error);
       throw error;
@@ -41,7 +39,7 @@ export class TabUtils {
       const tabs = await chrome.tabs.query({ 
         windowId: windowId
       });
-      return tabs.filter(tab => !tab.hidden);
+      return tabs;
     } catch (error) {
       console.error(`ウィンドウ${windowId}のタブ取得に失敗:`, error);
       throw error;
