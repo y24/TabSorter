@@ -20,6 +20,35 @@ export class TabUtils {
   }
 
   /**
+   * すべてのウィンドウのタブを取得する
+   */
+  static async getAllWindowsTabs(): Promise<chrome.tabs.Tab[]> {
+    try {
+      const tabs = await chrome.tabs.query({});
+      // hiddenプロパティでフィルタリング（APIではサポートされていないため、手動でフィルタリング）
+      return tabs.filter(tab => !tab.hidden);
+    } catch (error) {
+      console.error('すべてのウィンドウのタブ取得に失敗:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * ウィンドウIDでタブを取得する
+   */
+  static async getTabsByWindowId(windowId: number): Promise<chrome.tabs.Tab[]> {
+    try {
+      const tabs = await chrome.tabs.query({ 
+        windowId: windowId
+      });
+      return tabs.filter(tab => !tab.hidden);
+    } catch (error) {
+      console.error(`ウィンドウ${windowId}のタブ取得に失敗:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * タブをピン留めと非ピン留めに分離する
    */
   static separatePinnedTabs(tabs: chrome.tabs.Tab[]): {

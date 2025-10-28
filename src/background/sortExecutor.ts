@@ -11,6 +11,17 @@ export class SortExecutor {
   private static debounceTimer: number | null = null;
 
   /**
+   * スコープに応じてタブを並び替える
+   */
+  static async sortTabs(ruleId: RuleId, settings: Settings): Promise<SortResult> {
+    if (settings.scope === 'allWindows') {
+      return await this.sortAllWindows(ruleId, settings);
+    } else {
+      return await this.sortCurrentWindow(ruleId, settings);
+    }
+  }
+
+  /**
    * 現在のウィンドウのタブを並び替える
    */
   static async sortCurrentWindow(ruleId: RuleId, settings: Settings): Promise<SortResult> {
@@ -71,6 +82,109 @@ export class SortExecutor {
 
     } catch (error) {
       console.error('並び替え実行中にエラー:', error);
+      return {
+        success: false,
+        message: `並び替えに失敗しました: ${error}`
+      };
+    } finally {
+      this.isExecuting = false;
+      this.clearDragDetectionWindow(dragDetectionWindow);
+    }
+  }
+
+  /**
+   * すべてのウィンドウのタブを並び替える
+   */
+  static async sortAllWindows(ruleId: RuleId, settings: Settings): Promise<SortResult> {
+    // デバウンス処理
+    if (this.isExecuting) {
+      return {
+        success: false,
+        message: '並び替えが既に実行中です'
+      };
+    }
+
+    // 短時間のドラッグ検知ウィンドウ
+    const dragDetectionWindow = this.createDragDetectionWindow();
+    
+    try {
+      this.isExecuting = true;
+      
+      // ルールを取得
+      const rule = SortRuleRegistry.getRule(ruleId);
+      if (!rule) {
+        return {
+          success: false,
+          message: `ルール '${ruleId}' が見つかりません`
+        };
+      }
+
+      // すべてのウィンドウのタブを取得
+      const allTabs = await TabUtils.getAllWindowsTabs();
+      if (allTabs.length <= 1) {
+        return {
+          success: true,
+          message: '並び替え対象のタブがありません',
+          movedTabs: 0
+        };
+      }
+
+      // ウィンドウごとにタブを分類
+      const tabsByWindow = new Map<number, chrome.tabs.Tab[]>();
+      for (const tab of allTabs) {
+        const windowId = tab.windowId;
+        if (!tabsByWindow.has(windowId)) {
+          tabsByWindow.set(windowId, []);
+        }
+        tabsByWindow.get(windowId)!.push(tab);
+      }
+
+      let totalMovedTabs = 0;
+      const results: string[] = [];
+
+      // 各ウィンドウで並び替えを実行
+      for (const [windowId, windowTabs] of tabsByWindow) {
+        if (windowTabs.length <= 1) continue;
+
+        try {
+          // ピン留めと非ピン留めに分離
+          const { pinned, unpinned } = TabUtils.separatePinnedTabs(windowTabs);
+
+          // 並び替え実行
+          let windowMovedTabs = 0;
+          
+          if (settings.pinMode === 'sortPinned' && pinned.length > 0) {
+            const pinnedResult = await this.sortTabGroup(pinned, rule, settings);
+            windowMovedTabs += pinnedResult.movedTabs || 0;
+          }
+          
+          if (unpinned.length > 0) {
+            const unpinnedResult = await this.sortTabGroup(unpinned, rule, settings);
+            windowMovedTabs += unpinnedResult.movedTabs || 0;
+          }
+
+          totalMovedTabs += windowMovedTabs;
+          if (windowMovedTabs > 0) {
+            results.push(`ウィンドウ${windowId}: ${windowMovedTabs}個のタブ`);
+          }
+        } catch (error) {
+          console.error(`ウィンドウ${windowId}の並び替えに失敗:`, error);
+          results.push(`ウィンドウ${windowId}: エラー`);
+        }
+      }
+
+      const message = results.length > 0 
+        ? `すべてのウィンドウで${totalMovedTabs}個のタブを並び替えました (${results.join(', ')})`
+        : '並び替え対象のタブがありませんでした';
+
+      return {
+        success: true,
+        message,
+        movedTabs: totalMovedTabs
+      };
+
+    } catch (error) {
+      console.error('すべてのウィンドウの並び替え実行中にエラー:', error);
       return {
         success: false,
         message: `並び替えに失敗しました: ${error}`

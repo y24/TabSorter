@@ -100,7 +100,7 @@ export class ContextMenuManager {
       const settings = await StorageManager.getSettings();
       
       // ソートを実行
-      const result = await SortExecutor.sortCurrentWindow(ruleId as any, settings);
+      const result = await SortExecutor.sortTabs(ruleId as any, settings);
       
       if (result.success) {
         console.log('ソートが完了しました:', result.message);

@@ -143,7 +143,7 @@ class TabSorterServiceWorker {
       const settings = await StorageManager.getSettings();
       
       // メインルールでソートを実行
-      const result = await SortExecutor.sortCurrentWindow(settings.mainRule, settings);
+      const result = await SortExecutor.sortTabs(settings.mainRule, settings);
       
       if (result.success) {
         console.log('メインルールでのソートが完了しました:', result.message);
